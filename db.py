@@ -37,5 +37,27 @@ def get_by_id(qr_id):
     connection.close()
     return data
 
+def get_all_by_user_id(user_id):
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+    data = cursor.execute(f'''
+    SELECT * FROM objects WHERE author_id = {user_id};''').fetchall()
+
+    result = []
+    for item in data:
+        result.append({'id': item[0], 'title': item[1], 'desc': item[2], 'author_id': item[3]})
+
+    connection.commit()
+    connection.close()
+    return result
+
+def delete_qr_by_id(qr_id, user_id):
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+    data = cursor.execute(f'''
+    DELETE FROM objects WHERE id = {qr_id} and author_id = {user_id};''')
+    connection.commit()
+    connection.close()
+    return data
 
 create_table()
